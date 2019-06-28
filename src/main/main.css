@@ -6,7 +6,3 @@ body {
 ol, ul {
     padding-left: 30px;
 }
-
-.kbd-navigation .square:focus {
-    background: #ddd;
-}
