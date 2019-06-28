@@ -6,10 +6,24 @@ import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.div
+import react.setState
 
-class Board(): RComponent<RProps, RState>() {
+class Board: RComponent<RProps, Board.State>() {
+    init {
+        state.squares = Array(9) { null }
+    }
+
     private fun RBuilder.renderSquare(i: Int) {
-        square()
+        square(value = state.squares[i],
+                onClickFunction = { handleClick(i) })
+    }
+
+    fun handleClick(i: Int) {
+        val updateSquares = state.squares.copyOf()
+        updateSquares[i] = "X"
+        setState {
+            squares = updateSquares
+        }
     }
 
     override fun RBuilder.render() {
@@ -33,6 +47,10 @@ class Board(): RComponent<RProps, RState>() {
                 renderSquare(8)
             }
         }
+    }
+
+    interface State: RState {
+        var squares: Array<String?>
     }
 }
 
