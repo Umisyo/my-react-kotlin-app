@@ -19,21 +19,46 @@ class Board: RComponent<RProps, Board.State>() {
                 onClickFunction = { handleClick(i) })
     }
 
-    private fun handleClick(i: Int) {
+    private fun handleClick(i: Int): Unit? {
         val updateSquares = state.squares.copyOf()
+
+        if (calculateWinner(updateSquares) != null || updateSquares[i] != null) return null
 
         if (state.xIsNext) updateSquares[i] = "X"
         else updateSquares[i] = "O"
 
-        setState {
+        return setState {
             squares = updateSquares
             xIsNext = !state.xIsNext
         }
+    }
+
+    private fun calculateWinner(squares:Array<String?>): String? {
+        val lines: Array<Array<Int>> = arrayOf(
+                arrayOf(0, 1, 2),
+                arrayOf(3, 4, 5),
+                arrayOf(6, 7, 8),
+                arrayOf(0, 3, 6),
+                arrayOf(1, 4, 7),
+                arrayOf(2, 5, 8),
+                arrayOf(0, 4, 8),
+                arrayOf(2, 4, 6)
+        )
+
+        for (line in lines) {
+            val (a, b, c) = line
+            if (squares[a] != null && squares[a] == squares[b] && squares[a] == squares[c]) {
+                return squares[a]
+            }
+        }
+
+        return null
 
     }
 
     override fun RBuilder.render() {
-        val status = "Next player :" + (if (state.xIsNext) "X" else "O")
+        val winner: String? = calculateWinner(state.squares)
+        val status = if(winner != null) "Winner: $winner" else ("Next player :" + (if (state.xIsNext) "X" else "O"))
 
         div {
             div(classes = "status") { + status }
@@ -54,6 +79,7 @@ class Board: RComponent<RProps, Board.State>() {
             }
         }
     }
+
 
     interface State: RState {
         var squares: Array<String?>
