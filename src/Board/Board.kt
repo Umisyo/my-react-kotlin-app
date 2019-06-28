@@ -8,8 +8,8 @@ import react.RState
 import react.dom.div
 
 class Board(): RComponent<RProps, RState>() {
-    fun RBuilder.renderSquare(i: Int) {
-        square(i)
+    private fun RBuilder.renderSquare(i: Int) {
+        square()
     }
 
     override fun RBuilder.render() {
