@@ -11,6 +11,7 @@ import react.setState
 class Board: RComponent<RProps, Board.State>() {
     init {
         state.squares = Array(9) { null }
+        state.xIsNext = true
     }
 
     private fun RBuilder.renderSquare(i: Int) {
@@ -18,16 +19,21 @@ class Board: RComponent<RProps, Board.State>() {
                 onClickFunction = { handleClick(i) })
     }
 
-    fun handleClick(i: Int) {
+    private fun handleClick(i: Int) {
         val updateSquares = state.squares.copyOf()
-        updateSquares[i] = "X"
+
+        if (state.xIsNext) updateSquares[i] = "X"
+        else updateSquares[i] = "O"
+
         setState {
             squares = updateSquares
+            xIsNext = !state.xIsNext
         }
+
     }
 
     override fun RBuilder.render() {
-        val status = "Next player X"
+        val status = "Next player :" + (if (state.xIsNext) "X" else "O")
 
         div {
             div(classes = "status") { + status }
@@ -51,6 +57,7 @@ class Board: RComponent<RProps, Board.State>() {
 
     interface State: RState {
         var squares: Array<String?>
+        var xIsNext: Boolean
     }
 }
 
