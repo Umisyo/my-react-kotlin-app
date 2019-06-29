@@ -7,16 +7,14 @@ import react.RProps
 import react.RState
 import react.dom.div
 
-class Board(): RComponent<RProps, RState>() {
-    fun RBuilder.renderSquare(i: Int) {
-        square()
+class Board: RComponent<Board.Props, RState>() {
+    private fun RBuilder.renderSquare(i: Int) {
+        square(value = props.squares[i],
+                onClickFunction = { props.onClickFunction(i) })
     }
 
     override fun RBuilder.render() {
-        val status = "Next player X"
-
         div {
-            div(classes = "status") { + status }
             div(classes = "board-row") {
                 renderSquare(0)
                 renderSquare(1)
@@ -34,6 +32,14 @@ class Board(): RComponent<RProps, RState>() {
             }
         }
     }
+
+    interface Props: RProps {
+        var squares: Array<String?>
+        var onClickFunction: (Int) -> Unit
+    }
 }
 
-fun RBuilder.board() = child(Board::class) {}
+fun RBuilder.board(squares:Array<String?>, onClickFunction: (Int) -> Unit) = child(Board::class) {
+    attrs.squares = squares
+    attrs.onClickFunction = onClickFunction
+}

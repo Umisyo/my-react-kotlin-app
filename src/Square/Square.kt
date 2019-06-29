@@ -1,15 +1,12 @@
 package Square
 
+import kotlinx.html.js.onClickFunction
+import org.w3c.dom.events.Event
 import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
 import react.dom.button
 
-class Square (): RComponent<RProps, RState>() {
-    override fun RBuilder.render() {
-        button(classes = "square") { /*TODO*/ }
-    }
-}
-
-fun RBuilder.square() = child(Square::class) {}
+fun RBuilder.square(value: String?, onClickFunction: (Event) -> Unit) =
+        button(classes = "square"){
+            +(value ?: "")
+            attrs.onClickFunction = onClickFunction
+        }
